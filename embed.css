@@ -1,0 +1,14 @@
+.embed-open{display:none}
+.embedded .sidebar{position:static;inset:auto;width:auto;min-height:0;padding:12px 16px;flex-direction:row;align-items:center;justify-content:space-between;gap:12px}
+.embedded .sidebar .side-label,.embedded .sidebar .side-note{display:none}
+.embedded .brand{font-size:18px}.embedded .brand-sub{font-size:11px}.embedded .brand-mark{width:34px;height:38px;font-size:20px}
+.embedded .embed-open{display:block;flex:none;color:#d4fff6;font-size:13px;text-underline-offset:4px;min-height:44px;padding:10px 0}
+.embedded #embedNavigation{position:sticky;top:0;z-index:70;background:#122c3d;padding:7px 7px 9px;border-bottom:1px solid #3a5968;box-shadow:0 3px 10px #122c3d18}
+.embedded #embedNavigation nav{position:static;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin:0;padding:0;overflow:visible;background:transparent;box-shadow:none}
+.embedded #embedNavigation nav a{display:flex;align-items:center;justify-content:center;min-height:48px;margin:0;padding:7px 2px;border:0;border-radius:7px;font-size:14px;line-height:1.5;text-align:center;white-space:normal}
+.embedded #embedNavigation nav a span{display:none}
+.embedded #embedNavigation nav a.active{background:#2b5665;color:#d4fff6;box-shadow:inset 0 3px #7cdbca;padding:7px 2px}
+.embedded .shell{margin-left:0}.embedded body{padding-bottom:0}.embedded{scroll-padding-top:82px}
+.embedded .draft-switch{top:65px}.embedded #toast{bottom:20px}
+@media(max-width:780px){.embedded .draft-switch{top:65px}.embedded main{scroll-margin-top:78px}.embedded .brand-sub{letter-spacing:1px}}
+@media print{.embedded #embedNavigation,.embedded .embed-open{display:none!important}}
