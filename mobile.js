@@ -9,10 +9,23 @@
  byId('showPreview').onclick=()=>workspace(true);
  const paperHost=document.querySelector('.paper-scroll');
  const paper=byId('officialPaper');
+ const stage=document.createElement('div');stage.className='paper-stage';
+ paper.before(stage);stage.append(paper);
  const readable=byId('mobilePaper');
  const mode=byId('previewStyle');
  mode.value='fit';
- function fitPaper(){const read=mode.value==='readable';paperHost.hidden=read;readable.hidden=!read;paperHost.classList.toggle('original-size',mode.value==='actual');paperHost.classList.toggle('fit-sheet',mode.value==='fit');if(paperHost.clientWidth>0){const available=paperHost.clientWidth-parseFloat(getComputedStyle(paperHost).paddingLeft)-parseFloat(getComputedStyle(paperHost).paddingRight)-2;const navHeight=document.querySelector('nav').getBoundingClientRect().height;const heightFit=media.matches?Math.max(120,innerHeight-navHeight-Math.max(0,paperHost.getBoundingClientRect().top)-18)/Math.max(1123,paper.scrollHeight):1;paper.style.setProperty('--paper-zoom',mode.value==='actual'?1:Math.min(1,available/794,heightFit));}}
+ function fitPaper(){
+  const read=mode.value==='readable';paperHost.hidden=read;readable.hidden=!read;
+  paperHost.classList.toggle('original-size',mode.value==='actual');paperHost.classList.toggle('fit-sheet',mode.value==='fit');
+  if(!paperHost.clientWidth)return;
+  const style=getComputedStyle(paperHost);
+  const available=Math.max(1,paperHost.clientWidth-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight)-2);
+  // 先以固定 A4 寬度排版，再縮放整張。縮放比例只取決於容器寬度，避免高度觀察互相回饋。
+  const scale=mode.value==='actual'?1:Math.min(1,available/794);
+  const height=Math.max(1123,paper.scrollHeight,paper.offsetHeight);
+  paper.style.setProperty('--paper-scale',String(scale));
+  stage.style.width=`${794*scale}px`;stage.style.height=`${height*scale}px`;
+ }
  window.updateMobilePreview=()=>{
   readable.replaceChildren();
   const status=document.createElement('p');status.className='readable-status';status.textContent='參考樣板／未核發 · 手機易讀內容';readable.append(status);
@@ -24,7 +37,9 @@
  };
  window.fitOfficialPaper=fitPaper;
  mode.onchange=fitPaper;byId('fitSheet').onclick=()=>{mode.value='fit';fitPaper();};byId('actualSheet').onclick=()=>{mode.value='actual';fitPaper();};
- new ResizeObserver(fitPaper).observe(paperHost);
+ let lastWidth=0;
+ new ResizeObserver(entries=>{const width=entries[0].contentRect.width;if(width!==lastWidth){lastWidth=width;fitPaper();}}).observe(paperHost);
+ new ResizeObserver(fitPaper).observe(paper);
  new MutationObserver(()=>window.updateMobilePreview()).observe(paper,{childList:true});
  window.openCaseDetail=()=>{if(media.matches){document.body.classList.add('case-detail-open');byId('caseDetail').scrollIntoView({block:'start',behavior:'smooth'});}};
  document.addEventListener('click',event=>{if(event.target.closest('.back-to-list')){document.body.classList.remove('case-detail-open');byId('caseList').scrollIntoView({block:'start',behavior:'smooth'});}if(event.target.closest('#groupFilters,#clearSearch'))document.body.classList.remove('case-detail-open');if(event.target.closest('#useCase'))workspace(false,false);});
@@ -32,6 +47,8 @@
  byId('routeFilter').addEventListener('change',()=>document.body.classList.remove('case-detail-open'));
  addEventListener('hashchange',()=>{if(media.matches)window.scrollTo({top:0,behavior:'instant'});});
  media.addEventListener('change',()=>{mode.value='fit';fitPaper();});
+ addEventListener('resize',fitPaper);
+ document.fonts.ready.then(fitPaper);
  addEventListener('afterprint',fitPaper);
  window.updateMobilePreview();workspace(false,false);
 })();

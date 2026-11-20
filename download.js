@@ -35,7 +35,7 @@
    const source=document.getElementById('officialPaper');
    staging=document.createElement('div');staging.className='export-staging';
    const clone=source.cloneNode(true);clone.removeAttribute('id');clone.classList.add('export-paper');
-   clone.style.setProperty('zoom','1','important');clone.style.setProperty('--paper-zoom','1');
+   clone.style.setProperty('transform','none','important');clone.style.removeProperty('--paper-scale');
    staging.append(clone);document.body.append(staging);
    // 在不受手機縮放影響的固定寬度副本上輸出，包含表尾與完整附註。
    const width=794,height=Math.max(1123,clone.scrollHeight);

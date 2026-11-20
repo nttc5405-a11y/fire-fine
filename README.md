@@ -41,3 +41,5 @@
 資料及來源對應檢核：`node tests/reference-integrity.cjs`。
 
 Google Sites 內嵌時自動改用上方四格導覽，避免 iframe 底端導覽落在外層可見區域之外；直接開啟網站仍保留手機底部導覽。可使用 `?embed=1` 強制內嵌版面，並可由頁首「另開完整頁面」開啟獨立網站。`embed.js`、`embed.css` 負責此版面。
+
+單據預覽以固定 794 px 寬排版，再以 transform 等比例縮放；不使用 CSS zoom 或依預覽高度反覆改變比例。整張顯示依容器寬度，原尺寸保留水平捲動；下載使用未縮放副本。

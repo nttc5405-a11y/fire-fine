@@ -45,10 +45,5 @@
  el('regenerateSubject').onclick=()=>{el('subjectText').value='';updateDraft();toast('已依目前情境重帶主旨')};
  el('paperMode').onchange=()=>updateDraft();
  el('formKind').onchange=()=>updateDraft();
- const paperHost=document.querySelector('.paper-scroll');
- const fit=()=>{if(window.fitOfficialPaper){window.fitOfficialPaper();return;}if(paperHost.clientWidth>0)el('officialPaper').style.setProperty('--paper-zoom',innerWidth>780?Math.min(1,(paperHost.clientWidth-38)/794):1)};
- new ResizeObserver(fit).observe(paperHost);
- addEventListener('beforeprint',()=>el('officialPaper').style.setProperty('--paper-zoom',1));
- addEventListener('afterprint',fit);
- renderOfficialForm();fit();
+ renderOfficialForm();
 })();
