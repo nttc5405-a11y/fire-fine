@@ -18,7 +18,7 @@
   const status=document.createElement('p');status.className='readable-status';status.textContent='參考樣板／未核發 · 手機易讀內容';readable.append(status);
   const title=document.createElement('h3');title.textContent=paper.querySelector('h2')?.textContent||'通知單預覽';readable.append(title);
   const dl=document.createElement('dl');
-  paper.querySelectorAll('tbody tr').forEach(row=>{const cells=[...row.children];if(cells.length===1){const dt=document.createElement('dt');dt.textContent='填單日期';const dd=document.createElement('dd');dd.textContent=cells[0].innerText;dl.append(dt,dd);return;}for(let i=0;i<cells.length-1;i+=2){const dt=document.createElement('dt');dt.textContent=cells[i].innerText.replace(/\s+/g,'').trim();const dd=document.createElement('dd');dd.textContent=cells[i+1].innerText.trim()||'尚未填寫';dl.append(dt,dd);}});
+  paper.querySelectorAll('tbody tr').forEach(row=>{const cells=[...row.children];if(cells.length===1){const dt=document.createElement('dt');dt.textContent='填單日期';const dd=document.createElement('dd');dd.textContent=cells[0].innerText;dl.append(dt,dd);return;}for(let i=0;i<cells.length-1;i+=2){const dt=document.createElement('dt');dt.textContent=cells[i].innerText.replace(/\s+/g,'').trim();if(cells[i].classList.contains('void-heading'))dt.className='void-heading';const dd=document.createElement('dd');dd.textContent=cells[i+1].innerText.trim()||'尚未填寫';dl.append(dt,dd);}});
   readable.append(dl);
   const notes=document.createElement('details');const noteTitle=document.createElement('summary');noteTitle.textContent='單據附註與權利告知';const noteText=document.createElement('p');noteText.textContent=paper.querySelector('.paper-notes')?.innerText||'';notes.append(noteTitle,noteText);readable.append(notes);fitPaper();
  };

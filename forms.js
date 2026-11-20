@@ -9,6 +9,7 @@
  const {c,d,kind}=context(),blank=val('paperMode')==='blank',committee=val('personType')==='committee';
  const v=(id,fallback='')=>blank?'':safe(val(id)||fallback);
  for(const id of ['birthWrap','identityWrap','homeWrap'])el(id).hidden=committee;
+ for(const id of ['partyBirth','partyIdentity','partyHome'])el(id).disabled=committee;
  el('repWrap').hidden=!committee;
  if(committee)for(const id of ['partyBirth','partyIdentity','partyHome'])el(id).value='';
  el('formKindHint').textContent=val('formKind')==='auto'?'依目前情境選擇表格；尚未確認處理方式時保留待確認標示。':'此選項只切換單據版型，不變更違規構成要件與罰則；請核對主旨是否與所選單據一致。';
@@ -20,9 +21,11 @@
  let facts=v('facts');if(!blank&&hasDeadline&&val('deadline'))facts+='<br><br>改善期限：'+v('deadline');
  let reason=v('legal');if(!blank&&val('attachments'))reason+='<br><br>附件：'+v('attachments');
  const violationRow=kind==='firework'?`<tr><th>違反法規</th><td colspan="9">${blank?'':safe(c.violation)}</td></tr>`:'';
+ const deletedCell=span=>`<td colspan="${span}" class="void-field"><svg class="void-cross" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M 2 4 L 98 96 M 2 96 L 98 4"/></svg><span>不得填寫（已刪除）</span></td>`;
+ const privateHeading=text=>committee?`<s>${text}</s>`:text;
  const table=`<table class="official-table" aria-label="${paperTitle(kind)}欄位"><colgroup><col style="width:13%"><col style="width:17%"><col style="width:5%"><col style="width:11%"><col style="width:10%"><col style="width:5%"><col style="width:13%"><col style="width:6%"><col style="width:12%"><col style="width:8%"></colgroup><tbody>
- <tr class="person-row"><th>${personLabel}</th><td colspan="2">${person}</td><th>性　別</th><td colspan="2">${v('partySex')}</td><th colspan="2">出生日期</th><td colspan="2">${committee?'':v('partyBirth')}</td></tr>
- <tr><th>國民身分證<br>統一編號</th><td colspan="2">${committee?'':v('partyIdentity')}</td><th>住　址</th><td colspan="6">${committee?'':v('partyHome')}</td></tr>
+ <tr class="person-row"><th>${personLabel}</th><td colspan="2">${person}</td><th>性　別</th><td colspan="2">${v('partySex')}</td><th colspan="2" class="${committee?'void-heading':''}">${privateHeading('出生日期')}</th>${committee?deletedCell(2):`<td colspan="2">${v('partyBirth')}</td>`}</tr>
+ <tr><th class="${committee?'void-heading':''}">${privateHeading('國民身分證<br>統一編號')}</th>${committee?deletedCell(2):`<td colspan="2">${v('partyIdentity')}</td>`}<th class="${committee?'void-heading':''}">${privateHeading('住　址')}</th>${committee?deletedCell(6):`<td colspan="6">${v('partyHome')}</td>`}</tr>
  <tr><th>場　所<br>名　稱</th><td colspan="2">${v('place')}</td><th>地　址</th><td colspan="6">${v('placeAddress')}</td></tr>
  <tr><th>檢查時間</th><td colspan="9">${v('checkTime')||'　　　　　年　　　　月　　　　日'}</td></tr>${violationRow}
  <tr class="subject-row"><th>主　旨</th><td colspan="9">${subject}</td></tr>
