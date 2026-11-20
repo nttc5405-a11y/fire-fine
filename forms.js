@@ -36,8 +36,10 @@
  <tr class="receipt-row"><th colspan="3">收受通知單者簽章欄</th><td colspan="7">${v('receipt')}</td></tr></tbody></table>`;
  const customNote=v('rightsNote');
  el('officialPaper').innerHTML=`<div class="paper-status">參考樣板／未核發</div><div class="paper-number">編號：${v('noticeNumber')||'　　　　　　　　　'}</div><h2>${paperTitle(kind)}</h2>${table}<div class="paper-notes"><b>註：</b><ol><li>原通知單為四聯：第一聯交當事人，第二聯送執行單位，第三聯供行政執行使用，第四聯自存；本頁僅呈現單聯版面。</li><li>事實、理由及法令依據應詳盡填寫；不敷使用時，依正式表單規定黏貼並加蓋騎縫章。</li><li>非本人簽收時，應依送達規定及機關指引填寫關係、職稱等資料；拒簽應依法辦理送達。</li><li>管理權人為公寓大廈管理委員會時，加註代表人姓名、性別；不填其出生日期、身分證字號及住址。</li><li>${customNote||'陳述意見、改善計畫及救濟告知，應依個案處分性質與最新版核定表單分別確認後填寫。'}</li></ol><p class="paper-final-note">此表依原始單據欄位重建，附註已整併較新指引；非核定原件，不含機關印信、職名章或親簽。</p></div>`;
- const source=kind==='firework'?'https://drive.google.com/file/d/1kAacBKY63dNz0qO4_euRdsunw0jcKXez/view':kind==='direct'?'https://drive.google.com/file/d/127Bv3z5DWiHOFsA1ZAbZT1RTXwKCrqEc/view':kind==='improve'?'https://drive.google.com/file/d/1bKkA4t5i0jM5EjamWn3Mu_vXyCiGKG5P/view':'https://docs.google.com/document/d/1go_in9JSdZXe2g3r0jxz8iENCq1q1_cG/edit';
+ const source=c.exampleSource||c.sources.find(url=>/https:\/\/(?:drive|docs)\.google\.com\//.test(url))||(kind==='improve'?'https://drive.google.com/file/d/1bKkA4t5i0jM5EjamWn3Mu_vXyCiGKG5P/view':FM);
+ const sourceFile=SOURCE_CATALOG.find(file=>source.includes(file.id));
  el('formSource').href=source;
+ el('formSource').textContent=sourceFile?`原始範例：${sourceFile.title}`:'開啟對應原始範例';
  {const additions=`\n\n【單據欄位】\n預覽種類：${paperTitle(kind)}\n編號：${val('noticeNumber')}\n管理權人／行為人：${val('partyName')}${committee?'\n主任委員姓名、性別：'+val('representative'):'\n性別：'+val('partySex')+'\n出生日期：'+val('partyBirth')+'\n國民身分證統一編號：'+val('partyIdentity')+'\n住址：'+val('partyHome')}\n場所地址：${val('placeAddress')}\n發單單位：${val('issuingUnit')}\n主管：${val('supervisor')}\n填單人：${val('officer')}\n填單日期：${val('issueDate')}\n簽收欄參考：${val('receipt')}\n權利告知及附註：${val('rightsNote')}`;const output=el('draftOutput');output.textContent=output.textContent.split('\n\n【單據欄位】')[0]+additions;}
  };
  el('regenerateSubject').onclick=()=>{el('subjectText').value='';updateDraft();toast('已依目前情境重帶主旨')};
